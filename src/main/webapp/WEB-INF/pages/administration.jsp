@@ -6,7 +6,7 @@
   Time: 20:10
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html>
 <head>
     <title>Страница администратора</title>
@@ -134,9 +134,8 @@
     </script>
 </div>
 <br>
-<br>
 <div>
-    <form name="nameForm" method="GET" action="/fast-water/water/administration">
+    <form name="nameForm" method="GET" action="/fast-water/water/administrationAdd">
     Широта: <input type="text" name="latitude"/>
     Долгота:<input type="text" name="longitude"/>
     Пост: <input type="text" name="post"/>
@@ -150,6 +149,40 @@
     </form>
 </div>
 <br>
+<br>
+<H2>Данные c файла</H2>
+<div class="container">
+    <table>
+        <thead>
+        <tr class="tr">
+            <th>ID Поста</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Уровень снега</th>
+            <th>Плотность снега</th>
+            <th>Промерзание почвы</th>
+            <th>Температура воды</th>
+            <th>Толщина льда на водоёме</th>
+            <th>Уровень воды</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${hydrologyList}" var="hydrology">
+            <tr>
+                <td>${hydrology.namePost}</td>
+                <td>${hydrology.localDate}</td>
+                <td>${hydrology.localTime}</td>
+                <td>${hydrology.levelSnow}</td>
+                <td>${hydrology.reserveWater}</td>
+                <td>${hydrology.levelFreezingGround}</td>
+                <td>${hydrology.temperatureWater}</td>
+                <td>${hydrology.heightIceOnWater}</td>
+                <td>${hydrology.lewelWater}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 <br>
 <H2>Данные с ресурса DarkSky</H2>
 <div class="container">
@@ -171,7 +204,6 @@
             <th>Снег</th>
             <th>Дождь</th>
             <th>Дождь/снег</th>
-            <th>t</th>
         </tr>
         </thead>
         <tbody>
@@ -196,45 +228,6 @@
         </c:forEach>
         </tbody>
     </table>
-</div>
-<H2>Данные c файла</H2>
-<div class="container">
-    <table>
-        <thead>
-        <tr class="tr">
-            <th>ID Поста</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Уровень снега</th>
-            <th>Плотность снега</th>
-            <th>Промерзание почвы</th>
-            <th>Температура воды</th>
-            <th>Толщина льда на водоёме</th>
-            <th>Уровень воды</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${hydrologyList}" var="hydrology">
-            <tr>
-                <td>${hydrology.namePost}</td>
-                <td>${hydrology.localDate}</td>
-                <td>${hydrology.localTime}</td>
-                <td>${hydrology.levelSnow}</td>
-                <td>${hydrology.hardnessSnow}</td>
-                <td>${hydrology.levelFreezingGround}</td>
-                <td>${hydrology.temperatureWater}</td>
-                <td>${hydrology.heightIceOnWater}</td>
-                <td>${hydrology.lewelWater}</td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
-<div>
-    <form name="form" method="POST">
-        <input type="text" name="aggregate"/>
-        <button type="button" onclick="getAjax('/fast-water/water/download',printGet)">Загрузить</button>
-    </form>
 </div>
 <H2>Объединённые данные</H2>
 <div class="container">
@@ -274,15 +267,15 @@
                 <td>${flood.snow}</td>
                 <td>${flood.rain}</td>
                 <td>${flood.snowRain}</td>
-                <td>${flood.airHumidity}</td>
+                <td>${flood.relativeHumidity}</td>
+                <td>${flood.humidityDeficit}</td>
                 <td>${flood.temperatureDay}</td>
                 <td>${flood.temperatureNight}</td>
-                <td>${flood.temperature}</td>
                 <td>${flood.temperatureMax}</td>
                 <td>${flood.temperatureMin}</td>
 <%--                <td>${flood.solaractivity}</td>--%>
                 <td>${flood.levelSnow}</td>
-                <td>${flood.hardnessSnow}</td>
+                <td>${flood.waterReserveInSnow}</td>
                 <td>${flood.levelFreezingGround}</td>
                 <td>${flood.temperatureWater}</td>
                 <td>${flood.heightIceOnWater}</td>

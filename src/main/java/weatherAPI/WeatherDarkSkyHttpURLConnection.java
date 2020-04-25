@@ -38,8 +38,8 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
                 connection = (HttpURLConnection) new URL(url+getParamsString(parameters)).openConnection();
                 connection.setRequestMethod("GET");
                 connection.setUseCaches(false);
-                connection.setConnectTimeout(600);
-                connection.setReadTimeout(600);
+                connection.setConnectTimeout(500);
+                connection.setReadTimeout(500);
                 connection.setDoOutput(false); //Говорим о том, что параметров не будет
                 connection.connect();
 
@@ -103,8 +103,8 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
             connection = (HttpURLConnection) new URL(url+getParamsString(parameters)).openConnection();
             connection.setRequestMethod("GET");
             connection.setUseCaches(false);
-            connection.setConnectTimeout(500);
-            connection.setReadTimeout(500);
+            connection.setConnectTimeout(400);
+            connection.setReadTimeout(400);
             connection.setDoOutput(false); //Говорим о том, что параметров не будет
             connection.connect();
 

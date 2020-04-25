@@ -55,7 +55,7 @@ public class AggregationData {
                     Double.valueOf(w.getTemperatureHigh()),Double.valueOf(w.getTemperatureLow()),
                     Double.valueOf(w.getTemperature()),Double.valueOf(w.getTemperatureMax()),Double.valueOf(w.getTemperatureMin()),
                     hydrology.getLevelSnow(),
-                    hydrology.getHardnessSnow(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
+                    hydrology.getReserveWater(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
                     hydrology.getHeightIceOnWater(),hydrology.getLewelWater(),warning,post,Double.valueOf(w.getCloudCover()),"DarkSky"));
                 else floodList.add(new Flood(data,
                         new Time(w.getHour(),w.getMinute(),w.getSecond()),
@@ -63,8 +63,8 @@ public class AggregationData {
                         Double.valueOf(w.getRain()),Double.valueOf(w.getSleet()),Double.valueOf(w.getHumidity()),
                         Double.valueOf(w.getTemperatureHigh()),Double.valueOf(w.getTemperatureLow()),
                         Double.valueOf(w.getTemperatureMax()),Double.valueOf(w.getTemperatureMin()),
-                        hydrology.getLevelSnow(),hydrology.getHardnessSnow(),
-                        hydrology.getHardnessSnow(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
+                        hydrology.getLevelSnow(),hydrology.getReserveWater(),
+                        hydrology.getReserveWater(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
                         hydrology.getHeightIceOnWater(),hydrology.getLewelWater(),warning,post,Double.valueOf(w.getCloudCover()),"DarkSky"));
             }
         }

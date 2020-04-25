@@ -86,7 +86,7 @@ public class FloodView implements Serializable,Comparable<FloodView> {
     }
 
     public Time getTime() {
-        return time;
+        return this.time;
     }
 
     public Double getLongitudeDay() {
@@ -190,11 +190,14 @@ public class FloodView implements Serializable,Comparable<FloodView> {
     }
 
     public void setSpeedChangeLevelWater(FloodView obj) {
-        int changeHour=(int)((this.date.getTime()-obj.getDate().getTime())/(60*60*100))+
-                (int)((this.time.getTime()-obj.getTime().getTime())/(60*60*100));
-        int changeHour2= changeHour!=0 ? changeHour:1;
 
-        this.speedChangeLevelWater = (this.levelWater-obj.levelWater)/changeHour2;
+        if (this.getTime()!=null & obj.getTime()!=null) {
+            int changeHour = (int) ((this.date.getTime() - obj.getDate().getTime()) / (60 * 60 * 100)) +
+                    (int) ((this.time.getTime() - obj.getTime().getTime()) / (60 * 60 * 100));
+            int changeHour2 = changeHour != 0 ? changeHour : 1;
+
+            this.speedChangeLevelWater = (this.levelWater - obj.levelWater) / changeHour2;
+        }
     }
 
     public void setChangeLevelSnow(FloodView obj) {
@@ -202,10 +205,12 @@ public class FloodView implements Serializable,Comparable<FloodView> {
     }
 
     public void setSpeedChangeLevelSnow(FloodView obj) {
-        int changeHour=(int)((this.date.getTime()-obj.getDate().getTime())/(60*60*100))+
-                (int)((this.time.getTime()-obj.getTime().getTime())/(60*60*100));
-        int changeHour2= changeHour!=0 ? changeHour:1;
-        this.speedChangeLevelSnow = (this.levelSnow-obj.levelSnow)/changeHour2;
+        if (this.getTime()!=null & obj.getTime()!=null) {
+            int changeHour = (int) ((this.date.getTime() - obj.getDate().getTime()) / (60 * 60 * 100)) +
+                    (int) ((this.time.getTime() - obj.getTime().getTime()) / (60 * 60 * 100));
+            int changeHour2 = changeHour != 0 ? changeHour : 1;
+            this.speedChangeLevelSnow = (this.levelSnow - obj.levelSnow) / changeHour2;
+        }
     }
 
     @Override

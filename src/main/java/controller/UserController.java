@@ -48,13 +48,13 @@ public class UserController {
 
     @RequestMapping(value = "/main", method = RequestMethod.GET)//Mapping web context, на который будет реагировать метод
     public String main(Model uiModel, @RequestParam(value = "latitude2",defaultValue ="51.75641") String latitude2, @RequestParam(value = "longitude2",defaultValue ="55.118132") String longitude2,
-                       @RequestParam(value = "yearStart2",defaultValue ="2019") String yearStart2, @RequestParam(value = "monthStart2",defaultValue ="06") String monthStart2,
-                       @RequestParam(value = "dayStart2",defaultValue ="3") String dayStart2, @RequestParam(value = "yearFinish2",defaultValue ="2019") String yearFinish2,
-                       @RequestParam(value = "monthFinish2",defaultValue ="6") String monthFinish2, @RequestParam(value = "dayFinish2",defaultValue ="8") String dayFinish2,
+                       @RequestParam(value = "yearStart2",defaultValue ="2020") String yearStart2, @RequestParam(value = "monthStart2",defaultValue ="4") String monthStart2,
+                       @RequestParam(value = "dayStart2",defaultValue ="06") String dayStart2, @RequestParam(value = "yearFinish2",defaultValue ="2020") String yearFinish2,
+                       @RequestParam(value = "monthFinish2",defaultValue ="04") String monthFinish2, @RequestParam(value = "dayFinish2",defaultValue ="8") String dayFinish2,
                        @RequestParam(value = "location",defaultValue ="Unknown") String location,
-                       @RequestParam(value = "yearStart1",defaultValue ="2019") String yearStart1, @RequestParam(value = "monthStart1",defaultValue ="6") String monthStart1,
-                       @RequestParam(value = "dayStart1",defaultValue ="3") String dayStart1, @RequestParam(value = "yearFinish1",defaultValue ="2019") String yearFinish1,
-                       @RequestParam(value = "monthFinish1",defaultValue ="6") String monthFinish1, @RequestParam(value = "dayFinish1",defaultValue ="9") String dayFinish1) {
+                       @RequestParam(value = "yearStart1",defaultValue ="2020") String yearStart1, @RequestParam(value = "monthStart1",defaultValue ="4") String monthStart1,
+                       @RequestParam(value = "dayStart1",defaultValue ="6") String dayStart1, @RequestParam(value = "yearFinish1",defaultValue ="2020") String yearFinish1,
+                       @RequestParam(value = "monthFinish1",defaultValue ="4") String monthFinish1, @RequestParam(value = "dayFinish1",defaultValue ="8") String dayFinish1) {
         List<WeatherOpenMap> listWeatherOpenMap= null;
         List<FloodView> listFloodViews=null;
         try {
@@ -114,7 +114,7 @@ public class UserController {
             uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
         }
         if((post!=null) && (!post.equals(""))) {
-            hydrologyList = readExcel.readExcel("E:/Fast_Water_project/FastWaterWeb/Gidrolodge.xls",post,
+            hydrologyList = readExcel.readExcelHydrology("E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls",post,
                    Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
                     Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
             uiModel.addAttribute("hydrologyList",hydrologyList);
@@ -125,6 +125,7 @@ public class UserController {
         }
         return "administration";
     }
+
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)//Mapping web context, на который будет реагировать метод
     public @ResponseBody String download(@RequestParam(value = "aggregate",defaultValue ="something") String objectList) {
