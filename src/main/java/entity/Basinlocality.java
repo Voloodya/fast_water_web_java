@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name = "basinlocality", schema = "db_fastwater", catalog = "")
+@Table(name = "BasinLocality", schema = "db_fastwater", catalog = "")
 public class Basinlocality implements Serializable {
 
     private Integer idBasinLocality;

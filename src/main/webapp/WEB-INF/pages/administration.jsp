@@ -1,3 +1,4 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -17,6 +18,10 @@
         .container {
             height: 200px;
             overflow: scroll;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
         }
     </style>
     <script>
@@ -135,7 +140,7 @@
 </div>
 <br>
 <div>
-    <form name="nameForm" method="GET" action="/fast-water/water/administrationAdd">
+    <form name="nameForm" method="GET" action="/fast-water/water/administration">
     Широта: <input type="text" name="latitude"/>
     Долгота:<input type="text" name="longitude"/>
     Пост: <input type="text" name="post"/>
@@ -147,41 +152,6 @@
     День по:<input type="text" name="dayFinish"/>
         <button tybe="submit">Загрузить</button>
     </form>
-</div>
-<br>
-<br>
-<H2>Данные c файла</H2>
-<div class="container">
-    <table>
-        <thead>
-        <tr class="tr">
-            <th>ID Поста</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Уровень снега</th>
-            <th>Плотность снега</th>
-            <th>Промерзание почвы</th>
-            <th>Температура воды</th>
-            <th>Толщина льда на водоёме</th>
-            <th>Уровень воды</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${hydrologyList}" var="hydrology">
-            <tr>
-                <td>${hydrology.namePost}</td>
-                <td>${hydrology.localDate}</td>
-                <td>${hydrology.localTime}</td>
-                <td>${hydrology.levelSnow}</td>
-                <td>${hydrology.reserveWater}</td>
-                <td>${hydrology.levelFreezingGround}</td>
-                <td>${hydrology.temperatureWater}</td>
-                <td>${hydrology.heightIceOnWater}</td>
-                <td>${hydrology.lewelWater}</td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
 </div>
 <br>
 <H2>Данные с ресурса DarkSky</H2>
@@ -229,6 +199,41 @@
         </tbody>
     </table>
 </div>
+<br>
+<H2>Данные c файла</H2>
+<div class="container">
+    <table>
+        <thead>
+        <tr class="tr">
+            <th>ID Поста</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Уровень снега</th>
+            <th>Плотность снега</th>
+            <th>Промерзание почвы</th>
+            <th>Температура воды</th>
+            <th>Толщина льда на водоёме</th>
+            <th>Уровень воды</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${hydrologyList}" var="hydrology">
+            <tr>
+                <td>${hydrology.namePost}</td>
+                <td>${hydrology.localDate}</td>
+                <td>${hydrology.localTime}</td>
+                <td>${hydrology.levelSnow}</td>
+                <td>${hydrology.reserveWater}</td>
+                <td>${hydrology.levelFreezingGround}</td>
+                <td>${hydrology.temperatureWater}</td>
+                <td>${hydrology.heightIceOnWater}</td>
+                <td>${hydrology.lewelWater}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
+<br>
 <H2>Объединённые данные</H2>
 <div class="container">
     <table class="flood">

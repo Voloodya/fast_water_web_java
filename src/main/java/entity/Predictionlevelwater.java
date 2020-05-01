@@ -7,7 +7,7 @@ import java.util.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name = "predictionlevelwater", schema = "db_fastwater", catalog = "")
+@Table(name = "PredictionLevelWater", schema = "db_fastwater", catalog = "")
 public class Predictionlevelwater implements Serializable {
     private Integer idPredictionLevelWater;
     //  private int postId;

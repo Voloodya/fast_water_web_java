@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name = "locality", schema = "db_fastwater", catalog = "")
+@Table(name = "Locality", schema = "db_fastwater", catalog = "")
 public class Locality implements Serializable {
 
     private Integer idLocality;
@@ -15,7 +15,6 @@ public class Locality implements Serializable {
     private String description;
     private Geographkoords geographkoordsId;
     private Collection<Post> postsId;
-    private Collection<Postandlocality> postandlocalitiesId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,12 +77,4 @@ public class Locality implements Serializable {
         this.postsId = postsId;
     }
 
-    @OneToMany(mappedBy = "localityId",cascade=CascadeType.ALL,orphanRemoval = true)
-    public Collection<Postandlocality> getPostandlocalitiesId() {
-        return postandlocalitiesId;
-    }
-
-    public void setPostandlocalitiesId(Collection<Postandlocality> postandlocalitiesId) {
-        this.postandlocalitiesId = postandlocalitiesId;
-    }
 }

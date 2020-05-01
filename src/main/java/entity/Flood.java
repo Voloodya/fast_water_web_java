@@ -7,7 +7,7 @@ import java.util.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name = "flood", schema = "db_fastwater", catalog = "")
+@Table(name = "Flood", schema = "db_fastwater", catalog = "")
 public class Flood implements Serializable,Comparable<Flood> {
 
     private Long idFlood;

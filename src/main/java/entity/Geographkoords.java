@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name = "geographkoords", schema = "db_fastwater", catalog = "")
+@Table(name = "GeographKoords", schema = "db_fastwater", catalog = "")
 public class Geographkoords implements  Serializable{
     private Integer idGeographKoords;
     private String koordinate;

@@ -33,7 +33,7 @@ public class HibernateConfig {
             dataSource.setDriverClassName("com.mysql.jdbc.Driver");
             dataSource.setUrl("jdbc:mysql://localhost:3306/db_fastwater?useSSL=false");//"jdbc:mysql://localhost:3306/dbfastwater?useSSL=false"
                                                                                 //"jdbc:mysql://localhost:4848/jdbc_dbfastwater"
-            dataSource.setUsername("root");
+            dataSource.setUsername("vs");
             dataSource.setPassword("root");
         } catch (Exception e) {
             logger.error("MysqlDataSource bean cannot be created!", e);

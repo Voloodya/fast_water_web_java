@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
 
-    static private	String API_KEY_DARK_SKY = "1845377b62cd92cb9cec10c7f58f813f";
+    static private	String API_KEY_DARK_SKY = "c74dbff3f42321f93ed75860c203a73e";
     static private String baseURL="https://api.darksky.net/forecast/";
     static private String baseURLforecast="https://api.darksky.net/forecast/";
 
@@ -103,8 +103,8 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
             connection = (HttpURLConnection) new URL(url+getParamsString(parameters)).openConnection();
             connection.setRequestMethod("GET");
             connection.setUseCaches(false);
-            connection.setConnectTimeout(400);
-            connection.setReadTimeout(400);
+            connection.setConnectTimeout(500);
+            connection.setReadTimeout(500);
             connection.setDoOutput(false); //Говорим о том, что параметров не будет
             connection.connect();
 
@@ -273,10 +273,14 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
                 if (month < 10) monthStr = "0" + month;
                 else monthStr += month;
 
-                for (int day = dayStart; day <= dayFinish; day++) {
+                for ( ; dayStart != dayFinish; ) {
                     String dayStr = "";
-                    if (day < 10) dayStr = "0" + day;
-                    else dayStr += day;
+                    if (dayStart < 10) dayStr ="0"+dayStart;
+                    else dayStr += String.valueOf(dayStart);
+                    if(dayStart<30) {dayStart++;
+                        if (month < 10) monthStr="0"+month;
+                        else monthStr += month;}
+                    else if(dayStart==30) {dayStart=1; month++;}
 
                     for (int hour = hourStart; hour <= hourFinish; hour+=step) {
                         String hourStr = "";

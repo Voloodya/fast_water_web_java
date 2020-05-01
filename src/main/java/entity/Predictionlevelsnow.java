@@ -7,7 +7,7 @@ import java.util.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name = "predictionlevelsnow", schema = "db_fastwater", catalog = "")
+@Table(name = "PredictionLevelSnow", schema = "db_fastwater", catalog = "")
 public class Predictionlevelsnow implements Serializable {
 
     private Integer idPredictionLevelSnow;

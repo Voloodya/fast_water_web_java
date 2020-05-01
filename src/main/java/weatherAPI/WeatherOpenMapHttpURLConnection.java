@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class WeatherOpenMapHttpURLConnection implements WeatherOpenMapService {
 
-    private static 	String API_KEY_OpenWeatherMap = "f773afe63ddec7ee53a9142459191cdd";
+    private static 	String API_KEY_OpenWeatherMap = "052afb3635617804ce6b4098010e904c";
     private	String CITY_ID = "YOUR_CITY_ID";
     private static String UNITS = "metric"; // or imperial
     private	static String url_OpenWeatherMap_Forecast = "https://api.openweathermap.org/data/2.5/forecast?";

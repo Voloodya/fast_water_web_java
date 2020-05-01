@@ -45,16 +45,31 @@ public class UserController {
 
     List<Flood> listFlood=null;
 
+    Calendar date = new GregorianCalendar();
 
     @RequestMapping(value = "/main", method = RequestMethod.GET)//Mapping web context, на который будет реагировать метод
     public String main(Model uiModel, @RequestParam(value = "latitude2",defaultValue ="51.75641") String latitude2, @RequestParam(value = "longitude2",defaultValue ="55.118132") String longitude2,
                        @RequestParam(value = "yearStart2",defaultValue ="2020") String yearStart2, @RequestParam(value = "monthStart2",defaultValue ="4") String monthStart2,
-                       @RequestParam(value = "dayStart2",defaultValue ="06") String dayStart2, @RequestParam(value = "yearFinish2",defaultValue ="2020") String yearFinish2,
-                       @RequestParam(value = "monthFinish2",defaultValue ="04") String monthFinish2, @RequestParam(value = "dayFinish2",defaultValue ="8") String dayFinish2,
+                       @RequestParam(value = "dayStart2",defaultValue ="27") String dayStart2, @RequestParam(value = "yearFinish2",defaultValue ="2020") String yearFinish2,
+                       @RequestParam(value = "monthFinish2",defaultValue ="04") String monthFinish2, @RequestParam(value = "dayFinish2",defaultValue ="28") String dayFinish2,
                        @RequestParam(value = "location",defaultValue ="Unknown") String location,
                        @RequestParam(value = "yearStart1",defaultValue ="2020") String yearStart1, @RequestParam(value = "monthStart1",defaultValue ="4") String monthStart1,
                        @RequestParam(value = "dayStart1",defaultValue ="6") String dayStart1, @RequestParam(value = "yearFinish1",defaultValue ="2020") String yearFinish1,
                        @RequestParam(value = "monthFinish1",defaultValue ="4") String monthFinish1, @RequestParam(value = "dayFinish1",defaultValue ="8") String dayFinish1) {
+
+        yearStart2=String.valueOf(date.get(Calendar.YEAR));
+        monthStart2=String.valueOf(date.get(Calendar.MONTH)+1);
+        dayStart2=String.valueOf(date.get(Calendar.DAY_OF_MONTH));
+        yearFinish2=String.valueOf(Integer.valueOf(yearStart2));
+        monthFinish2=String.valueOf(Integer.valueOf(monthStart2));
+        int dayFinish=Integer.valueOf(dayStart2)+3;
+
+        if (dayFinish>30){
+            monthFinish2=String.valueOf(Integer.valueOf(monthFinish2)+1);
+            dayFinish2=String.valueOf(dayFinish-30);
+        }
+        else dayFinish2=String.valueOf(dayFinish);
+
         List<WeatherOpenMap> listWeatherOpenMap= null;
         List<FloodView> listFloodViews=null;
         try {
@@ -96,9 +111,9 @@ public class UserController {
     @RequestMapping(value = "/administration", method = RequestMethod.GET)//Mapping web context, на который будет реагировать метод
     public String administration(Model uiModel,@RequestParam(value = "latitude",required = false) String latitude, @RequestParam(value = "longitude",required = false) String longitude,
                                  @RequestParam(value = "post",required = false) String post,
-                                 @RequestParam(value = "yearStart",defaultValue ="2019") String yearStart, @RequestParam(value = "monthStart",defaultValue ="4") String monthStart,
-                                 @RequestParam(value = "dayStart",defaultValue ="1") String dayStart, @RequestParam(value = "yearFinish",defaultValue ="2019") String yearFinish,
-                                 @RequestParam(value = "monthFinish",defaultValue ="4") String monthFinish, @RequestParam(value = "dayFinish",defaultValue ="3") String dayFinish,
+                                 @RequestParam(value = "yearStart",defaultValue ="2020") String yearStart, @RequestParam(value = "monthStart",defaultValue ="4") String monthStart,
+                                 @RequestParam(value = "dayStart",defaultValue ="20") String dayStart, @RequestParam(value = "yearFinish",defaultValue ="2020") String yearFinish,
+                                 @RequestParam(value = "monthFinish",defaultValue ="4") String monthFinish, @RequestParam(value = "dayFinish",defaultValue ="25") String dayFinish,
                                  @RequestParam(value = "hourStep",defaultValue ="24") String hourStep, @RequestParam(value = "aggregate",defaultValue="") String aggregate) {
         List<PostView> listPostView=postService.getAllPostView();
         uiModel.addAttribute("listPosts",listPostView);
@@ -113,16 +128,16 @@ public class UserController {
             }
             uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
         }
-        if((post!=null) && (!post.equals(""))) {
-            hydrologyList = readExcel.readExcelHydrology("E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls",post,
-                   Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
-                    Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
-            uiModel.addAttribute("hydrologyList",hydrologyList);
-        }
-        if(listWeatherDarkSky!=null && hydrologyList!=null) {
-            listFlood = aggregationData.aggregation(hydrologyList, listWeatherDarkSky, post);
-            uiModel.addAttribute("listFlood", listFlood);
-        }
+//        if((post!=null) && (!post.equals(""))) {
+//            hydrologyList = readExcel.readExcelHydrology("E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls",post,
+//                   Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
+//                    Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
+//            uiModel.addAttribute("hydrologyList",hydrologyList);
+//        }
+//        if(listWeatherDarkSky!=null && hydrologyList!=null) {
+//            listFlood = aggregationData.aggregation(hydrologyList, listWeatherDarkSky, post);
+//            uiModel.addAttribute("listFlood", listFlood);
+//        }
         return "administration";
     }
 
