@@ -140,7 +140,7 @@
 </div>
 <br>
 <div>
-    <form name="nameForm" method="GET" action="/fast-water/water/administration">
+    <form name="nameForm" method="GET" action="/water/water/administration">
     Широта: <input type="text" name="latitude"/>
     Долгота:<input type="text" name="longitude"/>
     Пост: <input type="text" name="post"/>
@@ -295,7 +295,7 @@
 <div>
     <form name="form" method="POST">
         <input type="text" name="aggregate"/>
-        <button type="button" onclick="getAjax('/fast-water/water/download',printGet)">Загрузить</button>
+        <button type="button" onclick="getAjax('/water/water/download',printGet)">Загрузить</button>
     </form>
 </div>
 </body>

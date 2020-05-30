@@ -15,6 +15,7 @@ import weatherAPI.WeatherDarkSkyHttpURLConnection;
 import weatherAPI.WeatherOpenMap;
 import weatherAPI.WeatherOpenMapHttpURLConnection;
 
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Controller
@@ -42,6 +43,8 @@ public class UserController {
     private ReadExcel readExcel;
     @Autowired
     private AggregationData aggregationData;
+    @Autowired
+    private NeuralNetwork neuralNetwork;
 
     List<Flood> listFlood=null;
 
@@ -88,23 +91,24 @@ public class UserController {
         uiModel.addAttribute("listForecastDarkSky",listForecastDarkSky);
         if (location.equals("Unknown") || location.equals("")){
         listFloodViews=floodService.getAllFloodViev();
+
+
         uiModel.addAttribute("listFlood",listFloodViews);}
         else {listFloodViews=floodService.searhFloodViev(location);
             uiModel.addAttribute("listFlood",listFloodViews);}
-        List<FloodView> listFloodViewsSort=new ArrayList<>();
-
-        for (FloodView a : listFloodViews)
-            listFloodViewsSort.add(a);
-        Collections.sort(listFloodViewsSort);
-        for(int i=0;i<listFloodViewsSort.size()-1;i++) {
-            if(listFloodViewsSort.get(i).getIdPost()==listFloodViewsSort.get(i+1).getIdPost()){
-            listFloodViewsSort.get(i+1).setChangeLevelWater(listFloodViewsSort.get(i));
-            listFloodViewsSort.get(i+1).setSpeedChangeLevelWater(listFloodViewsSort.get(i));
-            listFloodViewsSort.get(i+1).setChangeLevelSnow(listFloodViewsSort.get(i));
-            listFloodViewsSort.get(i+1).setSpeedChangeLevelSnow(listFloodViewsSort.get(i));}
+//        List<FloodView> listFloodViewsSort=new ArrayList<>();
+//        for (FloodView a : listFloodViews)
+//            listFloodViewsSort.add(a);
+        Collections.sort(listFloodViews);
+        for(int i=0;i<listFloodViews.size()-1;i++) {
+            if(listFloodViews.get(i).getIdPost()==listFloodViews.get(i+1).getIdPost()){
+            listFloodViews.get(i+1).setChangeLevelWater(listFloodViews.get(i));
+            listFloodViews.get(i+1).setSpeedChangeLevelWater(listFloodViews.get(i));
+            listFloodViews.get(i+1).setChangeLevelSnow(listFloodViews.get(i));
+            listFloodViews.get(i+1).setSpeedChangeLevelSnow(listFloodViews.get(i));}
                 }
-        uiModel.addAttribute("listChangeFlood",listFloodViewsSort);
-        uiModel.addAttribute("listChangeFlood",listFloodViewsSort);
+        uiModel.addAttribute("listChangeFlood",listFloodViews);
+        uiModel.addAttribute("listChangeFlood",listFloodViews);
         return "main_page";
     }
 
@@ -128,12 +132,12 @@ public class UserController {
             }
             uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
         }
-//        if((post!=null) && (!post.equals(""))) {
-//            hydrologyList = readExcel.readExcelHydrology("E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls",post,
-//                   Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
-//                    Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
-//            uiModel.addAttribute("hydrologyList",hydrologyList);
-//        }
+        if((post!=null) && (!post.equals(""))) {
+            hydrologyList = readExcel.readExcelAll("Hydrometcentre.xls",post,
+                   Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
+                    Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
+            uiModel.addAttribute("hydrologyList",hydrologyList);
+        }
 //        if(listWeatherDarkSky!=null && hydrologyList!=null) {
 //            listFlood = aggregationData.aggregation(hydrologyList, listWeatherDarkSky, post);
 //            uiModel.addAttribute("listFlood", listFlood);

@@ -4,9 +4,12 @@ package service;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import view.Hydrology;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,6 +22,9 @@ import java.util.List;
 
 @Service
 public class ReadExcel {
+
+    @Autowired
+    ServletContext servletContext;
 
     private static String way="E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls";
 
@@ -113,18 +119,25 @@ public class ReadExcel {
         return hydrologyList;
     }
 
-    public List<Hydrology> readExcelAll (String way, String postName, int yearStart, int monthStart,int dayStart,
-                                               int yearFinish, int monthFinish,int dayFinish) {
+    public List<Hydrology> readExcelAll (String nameFile, String postName, int yearStart, int monthStart,int dayStart,
+                                               int yearFinish, int monthFinish,int dayFinish)  {
 
+        String wayPath=servletContext.getContextPath();
+        String wayPath2=new File(".").getAbsolutePath();
         List<Hydrology> hydrologyList = new ArrayList<Hydrology>();
+        String wayFile="";
+        try {
+            wayFile =new ClassPathResource(nameFile).getFile().getPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Read XSL file
         FileInputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(way));
+            inputStream = new FileInputStream(new File(wayFile));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         // Get the workbook instance for XLS file
         HSSFWorkbook workbook = null;
         try {

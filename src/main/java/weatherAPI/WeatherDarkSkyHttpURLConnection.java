@@ -289,7 +289,6 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
 
                         String date = yearStr + "-" + monthStr + "-" + dayStr + "T" + hourStr + ":" + "00" + ":" + "00";
 
-
                         JSONObject jsonObject = getWeatherJSONObjectForecast(date, lat, lon);
 
                         WeatherDarkSky weather = null;
@@ -396,7 +395,6 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
                         } catch (Exception e){
                             cloudCover="0";
                         }
-
                         if (precipType.equals("")) {
                             weather = new WeatherDarkSky(jsonObject.get("latitude").toString(), jsonObject.get("longitude").toString(),
                                     jsonObjectInner3.get("time").toString(), jsonObjectInner3.get("icon").toString(), cloudCover,
@@ -415,19 +413,14 @@ public class WeatherDarkSkyHttpURLConnection implements WeatherDarkSkyService {
                                     jsonObjectInner3.get("temperatureHigh").toString(), jsonObjectInner3.get("temperatureLow").toString(),
                                     jsonObjectInner3.get("dewPoint").toString(), jsonObjectInner3.get("humidity").toString(), jsonObjectInner3.get("precipType").toString(),
                                     precipIntensityMax);
-
                         }
                         listWeather.add(weather);
-
                 }
-
             }
 
         }
-
         return listWeather;
     }
-
 
     public static String getParamsString(final Map<String, String> params) {
         final StringBuilder result = new StringBuilder("?");

@@ -29,7 +29,7 @@ public class FloodImplDao implements FloodDao {
 
     @Override
     public List<Flood> getAll() {
-        List<Flood> listFlood=sessionFactory.getCurrentSession().createQuery("FROM Flood e",Flood.class).list();
+        List<Flood> listFlood=sessionFactory.getCurrentSession().createQuery("FROM Flood e ORDER BY postId, date",Flood.class).list();
         return listFlood;
     }
 

@@ -22,8 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 
-        registry.addViewController("/").setViewName("users_page");
-        registry.addViewController("/test").setViewName("test");
+        registry.addViewController("/").setViewName("main_page");
     }
 
     //Указываем где будут лежать ресурсы нашего проекта, такие как css, image, js и другие
