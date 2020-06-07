@@ -27,9 +27,9 @@ public class FloodImplService implements FloodService {
         List<FloodView> listFloodView=new ArrayList<FloodView>();
 
         for(Flood x : listFlood){
-            listFloodView.add(new FloodView(x.getPostId().getIdPost(),x.getIdFlood(),x.getPostId().getGeographkoordsId().getKoordinate(),
-                    x.getPostId().getLocalityId().getNameLocality(),x.getDate(),x.getTime(),x.getLongitudeDay(),x.getSnow(),x.getRain(),x.getSnowRain(),
-                    x.getRelativeHumidity(),x.getTemperatureDay(),x.getTemperatureNight(),x.getTemperature(),
+            listFloodView.add(new FloodView(x.getPostId().getIdPost(),x.getPostId().getNamePost(),x.getIdFlood(),x.getPostId().getGeographkoordsId().getKoordinate(),
+                    x.getPostId().getLocalityId().getNameLocality(),x.getDate(),x.getNumberDaysYear(),Double.valueOf(x.getHumidityDeficit()), x.getTime(),x.getLongitudeDay(),x.getSnow(),x.getRain(),x.getSnowRain(),
+                    x.getRelativeHumidity(),x.getTemperatureDay(),x.getTemperatureNight(),x.getTemperatureMidle(),
                     x.getTemperatureMax(),x.getTemperatureMin(),
                     x.getSolarActivity(),x.getLevelSnow(),x.getWaterReserveInSnow(),x.getLevelFreezingGround(),
                     x.getTemperatureWater(),x.getHeightIceOnWater(),x.getLevelWater(),x.getWarningFlood(),x.getDataSource()));
@@ -53,13 +53,37 @@ public class FloodImplService implements FloodService {
         List<FloodView> listFloodView=new ArrayList<FloodView>();
 
         for(Flood x : listFlood){
-            listFloodView.add(new FloodView(x.getPostId().getIdPost(),x.getIdFlood(),x.getPostId().getGeographkoordsId().getKoordinate(),
-                    x.getPostId().getLocalityId().getNameLocality(),x.getDate(),x.getTime(),x.getLongitudeDay(),x.getSnow(),x.getRain(),x.getSnowRain(),
-                    x.getRelativeHumidity(),x.getTemperatureDay(),x.getTemperatureNight(),x.getTemperature(),
+            listFloodView.add(new FloodView(x.getPostId().getIdPost(),x.getPostId().getNamePost(),x.getIdFlood(),x.getPostId().getGeographkoordsId().getKoordinate(),
+                    x.getPostId().getLocalityId().getNameLocality(),x.getDate(),x.getNumberDaysYear(),Double.valueOf(x.getHumidityDeficit()), x.getTime(),x.getLongitudeDay(),x.getSnow(),x.getRain(),x.getSnowRain(),
+                    x.getRelativeHumidity(),x.getTemperatureDay(),x.getTemperatureNight(),x.getTemperatureMidle(),
                     x.getTemperatureMax(),x.getTemperatureMin(),
                     x.getSolarActivity(),x.getLevelSnow(),x.getWaterReserveInSnow(),x.getLevelFreezingGround(),
                     x.getTemperatureWater(),x.getHeightIceOnWater(),x.getLevelWater(),x.getWarningFlood(),x.getDataSource()));
         }
         return listFloodView;
+    }
+
+    @Override
+    public List<FloodView> searhFloodViev(String namePost, Date dateStart, Date dateFinish) {
+        List<Flood> listFlood=new ArrayList<>();
+
+        listFlood=floodDao.searh(namePost,dateStart,dateFinish);
+
+        List<FloodView> listFloodView=new ArrayList<FloodView>();
+
+        for(Flood x : listFlood){
+            listFloodView.add(new FloodView(x.getPostId().getIdPost(),x.getPostId().getNamePost(),x.getIdFlood(),x.getPostId().getGeographkoordsId().getKoordinate(),
+                    x.getPostId().getLocalityId().getNameLocality(),x.getDate(),x.getNumberDaysYear(),Double.valueOf(x.getHumidityDeficit()), x.getTime(),x.getLongitudeDay(),x.getSnow(),x.getRain(),x.getSnowRain(),
+                    x.getRelativeHumidity(),x.getTemperatureDay(),x.getTemperatureNight(),x.getTemperatureMidle(),
+                    x.getTemperatureMax(),x.getTemperatureMin(),
+                    x.getSolarActivity(),x.getLevelSnow(),x.getWaterReserveInSnow(),x.getLevelFreezingGround(),
+                    x.getTemperatureWater(),x.getHeightIceOnWater(),x.getLevelWater(),x.getWarningFlood(),x.getDataSource()));
+        }
+        return listFloodView;
+    }
+
+    @Override
+    public void dell(Post namePost, Date dateStart, Date dateFinish) {
+
     }
 }

@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import view.Hydrology;
+import view.HydrologyFile;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -28,10 +28,10 @@ public class ReadExcel {
 
     private static String way="E:/Fast_Water_project/FastWaterWeb/Hydrometcentre.xls";
 
-    public List<Hydrology> readExcelHydrology (String way, String postName, int yearStart, int monthStart,int dayStart,
-                                     int yearFinish, int monthFinish,int dayFinish){
+    public List<HydrologyFile> readExcelHydrology (String way, String postName, int yearStart, int monthStart, int dayStart,
+                                                   int yearFinish, int monthFinish, int dayFinish){
 
-        List<Hydrology> hydrologyList=new ArrayList<Hydrology>();
+        List<HydrologyFile> hydrologyList=new ArrayList<HydrologyFile>();
         // Read XSL file
         FileInputStream inputStream = null;
         try {
@@ -63,7 +63,7 @@ public class ReadExcel {
                 LocalDate localDate = LocalDate.of((int) row.getCell(1).getNumericCellValue(), (int) row.getCell(2).getNumericCellValue(),
                         (int) row.getCell(3).getNumericCellValue());
                 LocalTime localTime = LocalTime.of((int) row.getCell(4).getNumericCellValue(), 00, 00);
-                hydrologyList.add(new Hydrology(row.getCell(0).toString(),
+                hydrologyList.add(new HydrologyFile(row.getCell(0).toString(),
                         localDate, localTime,
                         row.getCell(7).getNumericCellValue(), row.getCell(9).getNumericCellValue(),
                         row.getCell(10).getNumericCellValue(), row.getCell(19).getNumericCellValue(),
@@ -119,12 +119,10 @@ public class ReadExcel {
         return hydrologyList;
     }
 
-    public List<Hydrology> readExcelAll (String nameFile, String postName, int yearStart, int monthStart,int dayStart,
+    public List<HydrologyFile> readExcelAll (String nameFile, String postName, int yearStart, int monthStart,int dayStart,
                                                int yearFinish, int monthFinish,int dayFinish)  {
 
-        String wayPath=servletContext.getContextPath();
-        String wayPath2=new File(".").getAbsolutePath();
-        List<Hydrology> hydrologyList = new ArrayList<Hydrology>();
+        List<HydrologyFile> hydrologyList = new ArrayList<HydrologyFile>();
         String wayFile="";
         try {
             wayFile =new ClassPathResource(nameFile).getFile().getPath();
@@ -160,9 +158,10 @@ public class ReadExcel {
 
                 LocalDate localDate = LocalDate.of((int) row.getCell(1).getNumericCellValue(), (int) row.getCell(2).getNumericCellValue(),
                         (int) row.getCell(3).getNumericCellValue());
+                LocalTime localTime = LocalTime.of((int) row.getCell(4).getNumericCellValue(), 00, 00);
 
-                hydrologyList.add(new Hydrology(row.getCell(0).toString(),
-                        localDate, (int)row.getCell(5).getNumericCellValue(),
+                hydrologyList.add(new HydrologyFile(row.getCell(0).toString(),
+                        localDate,localTime, (int)row.getCell(5).getNumericCellValue(),
                         row.getCell(6).getNumericCellValue(), row.getCell(7).getNumericCellValue(),
                         row.getCell(8).getNumericCellValue(), row.getCell(9).getNumericCellValue(),
                         row.getCell(10).getNumericCellValue(), row.getCell(13).getNumericCellValue(),

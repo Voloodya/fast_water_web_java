@@ -12,5 +12,7 @@ public interface FloodService {
     List<FloodView> searhFloodViev(Date date);
     List<FloodView> searhFloodViev(Post post);
     List<FloodView> searhFloodViev(String loclity);
+    List<FloodView> searhFloodViev(String namePost, Date dateStart,Date dateFinish);
+    void dell (Post namePost, Date dateStart, Date dateFinish);
 
 }

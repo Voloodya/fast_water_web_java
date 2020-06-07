@@ -10,7 +10,7 @@ import java.sql.Time;
 @Table(name = "Flood", schema = "db_fastwater", catalog = "")
 public class Flood implements Serializable,Comparable<Flood> {
 
-    private Long idFlood;
+    private int idFlood;
     // private Integer postId;
     private Date date;
     private Time time;
@@ -80,6 +80,7 @@ public class Flood implements Serializable,Comparable<Flood> {
         this.temperatureNight = temperatureNight;
         this.temperatureMax=temperatureMax;
         this.temperatureMin=temperatureMin;
+        this.temperatureMidle=(temperatureMax+temperatureMin)/2;
         this.solaractivity = solaractivity;
         this.levelSnow = levelSnow;
         this.waterReserveInSnow = waterReserveInSnow;
@@ -92,15 +93,36 @@ public class Flood implements Serializable,Comparable<Flood> {
         this.dataSource=dataSource;
     }
 
+    public Flood(Date date, Integer numberDaysYear, Double snowRain, Double relativeHumidity, Double humidityDeficit, Double temperatureDay, Double temperatureNight, Double temperatureMax, Double temperatureMin, Double solaractivity, Double levelSnow, Double waterReserveInSnow, Double levelFreezingGround, Double heightIceOnWater, double levelWater, String dataSource, Post postId) {
+        this.date = date;
+        this.time = new Time(00,00,00);
+        this.numberDaysYear = numberDaysYear;
+        this.snowRain = snowRain;
+        this.relativeHumidity = relativeHumidity;
+        this.humidityDeficit = humidityDeficit;
+        this.temperatureDay = temperatureDay;
+        this.temperatureNight = temperatureNight;
+        this.temperatureMax = temperatureMax;
+        this.temperatureMin = temperatureMin;
+        this.temperatureMidle=(temperatureMax+temperatureMin)/2;
+        this.solaractivity = solaractivity;
+        this.levelSnow = levelSnow;
+        this.waterReserveInSnow = waterReserveInSnow;
+        this.levelFreezingGround = levelFreezingGround;
+        this.heightIceOnWater = heightIceOnWater;
+        this.levelWater = levelWater;
+        this.dataSource = dataSource;
+        this.postId = postId;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_Flood")
-    public Long getIdFlood() {
+    public int getIdFlood() {
         return idFlood;
     }
 
-    public void setIdFlood(Long idFlood) {
+    public void setIdFlood(int idFlood) {
         this.idFlood = idFlood;
     }
 
@@ -133,7 +155,6 @@ public class Flood implements Serializable,Comparable<Flood> {
     public void setNumberDaysYear(Integer numberDaysYear) {
         this.numberDaysYear =numberDaysYear;
     }
-
 
     @Basic
     @Column(name = "Time")
@@ -188,7 +209,8 @@ public class Flood implements Serializable,Comparable<Flood> {
     @Basic
     @Column(name = "HumidityDeficit")
     public Double getHumidityDeficit() {
-        return humidityDeficit;
+        if(humidityDeficit!=null) return humidityDeficit;
+        else return 0.0;
     }
 
     public void setHumidityDeficit(Double humidityDeficit) {
@@ -228,12 +250,12 @@ public class Flood implements Serializable,Comparable<Flood> {
 
     @Basic
     @Column(name = "Temperature")
-    public Double getTemperature() {
+    public Double getTemperatureMidle() {
         return temperatureMidle;
     }
 
-    public void setTemperature(Double temperature) {
-        this.temperatureMidle = temperature;
+    public void setTemperatureMidle(Double temperatureMidle) {
+        this.temperatureMidle = temperatureMidle;
     }
 
     @Basic

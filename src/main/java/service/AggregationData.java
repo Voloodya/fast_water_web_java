@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import view.Hydrology;
+import view.HydrologyFile;
 import weatherAPI.WeatherDarkSky;
 
 import java.sql.Time;
@@ -26,11 +26,11 @@ public class AggregationData {
     @Autowired
     private PostDao postDao;
 
-    public List<Flood> aggregation(List<Hydrology> hydrologyList, List<WeatherDarkSky> weatherDarkSkyList,String namePost)
+    public List<Flood> aggregationFileAndRemoute(List<HydrologyFile> hydrologyList, List<WeatherDarkSky> weatherDarkSkyList, String namePost)
     {
         List<Flood> floodList=new ArrayList<>();
-        List<Hydrology> hydrologyNewList=null;
-        Hydrology hydrology=null;
+        List<HydrologyFile> hydrologyNewList=null;
+        HydrologyFile hydrology=null;
         Post post=postDao.searсh(namePost);
 
         for (WeatherDarkSky w : weatherDarkSkyList) {
@@ -55,16 +55,17 @@ public class AggregationData {
                     Double.valueOf(w.getTemperatureHigh()),Double.valueOf(w.getTemperatureLow()),
                     Double.valueOf(w.getTemperature()),Double.valueOf(w.getTemperatureMax()),Double.valueOf(w.getTemperatureMin()),
                     hydrology.getLevelSnow(),
-                    hydrology.getReserveWater(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
+                    hydrology.getWaterReserveInSnow(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
                     hydrology.getHeightIceOnWater(),hydrology.getLewelWater(),warning,post,Double.valueOf(w.getCloudCover()),"DarkSky"));
                 else floodList.add(new Flood(data,
                         new Time(w.getHour(),w.getMinute(),w.getSecond()),
                         Double.valueOf(w.getLonitudeDay_seconds()),Double.valueOf(w.getSnow()),
                         Double.valueOf(w.getRain()),Double.valueOf(w.getSleet()),Double.valueOf(w.getHumidity()),
+                        Double.valueOf(hydrology.getDeficitHumidityAir()),
                         Double.valueOf(w.getTemperatureHigh()),Double.valueOf(w.getTemperatureLow()),
                         Double.valueOf(w.getTemperatureMax()),Double.valueOf(w.getTemperatureMin()),
-                        hydrology.getLevelSnow(),hydrology.getReserveWater(),
-                        hydrology.getReserveWater(),hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
+                        hydrology.getLevelSnow(),hydrology.getWaterReserveInSnow(),
+                        hydrology.getLevelFreezingGround(),hydrology.getTemperatureWater(),
                         hydrology.getHeightIceOnWater(),hydrology.getLewelWater(),warning,post,Double.valueOf(w.getCloudCover()),"DarkSky"));
             }
         }

@@ -3,7 +3,7 @@ package view;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Hydrology {
+public class HydrologyFile {
 
     private String namePost;
     private LocalDate localDate;
@@ -15,7 +15,7 @@ public class Hydrology {
     private LocalTime localTime;
     private double levelSnow;
     private double changeSnow;
-    private double reserveWater;
+    private double waterReserveInSnow;
     private double levelFreezingGround;
     private double temperatureWater;
     private double temperatureMin;
@@ -27,12 +27,12 @@ public class Hydrology {
     private double lewelWater;
     private double changeWater;
 
-    public Hydrology(String namePost, LocalDate localDate, LocalTime localTime, double levelSnow, double reserveWater, double levelFreezingGround, double temperatureWater, double heightIceOnWater, double lewelWater) {
+    public HydrologyFile(String namePost, LocalDate localDate, LocalTime localTime, double levelSnow, double waterReserveInSnow, double levelFreezingGround, double temperatureWater, double heightIceOnWater, double lewelWater) {
         this.namePost = namePost;
         this.localDate = localDate;
         this.localTime = localTime;
         this.levelSnow = levelSnow;
-        this.reserveWater = reserveWater;
+        this.waterReserveInSnow = waterReserveInSnow;
         this.levelFreezingGround = levelFreezingGround;
         this.temperatureWater = temperatureWater;
         this.heightIceOnWater = heightIceOnWater;
@@ -42,17 +42,18 @@ public class Hydrology {
         this.day=localDate.getDayOfMonth();
     }
 
-    public Hydrology(String namePost, LocalDate localDate, int countDay, double downfall, double levelSnow, double changeSnow,
-                     double reserveWater, double levelFreezingGround, double temperatureMin,
+    public HydrologyFile(String namePost, LocalDate localDate,LocalTime localTime, int countDay, double downfall, double levelSnow, double changeSnow,
+                     double waterReserveInSnow, double levelFreezingGround, double temperatureMin,
                      double temperatureMax, double relativeHumidityAir, double deficitHumidityAir, double sunShine,
                      double heightIceOnWater, double lewelWater, double changeWater) {
         this.namePost = namePost;
         this.localDate = localDate;
+        this.localTime = localTime;
         this.countDay = countDay;
         this.downfall = downfall;
         this.levelSnow = levelSnow;
         this.changeSnow = changeSnow;
-        this.reserveWater = reserveWater;
+        this.waterReserveInSnow = waterReserveInSnow;
         this.levelFreezingGround = levelFreezingGround;
         this.temperatureMin = temperatureMin;
         this.temperatureMax = temperatureMax;
@@ -104,8 +105,8 @@ public class Hydrology {
         return changeSnow;
     }
 
-    public double getReserveWater() {
-        return reserveWater;
+    public double getWaterReserveInSnow() {
+        return waterReserveInSnow;
     }
 
     public double getLevelFreezingGround() {
@@ -188,8 +189,8 @@ public class Hydrology {
         this.changeSnow = changeSnow;
     }
 
-    public void setReserveWater(double reserveWater) {
-        this.reserveWater = reserveWater;
+    public void setWaterReserveInSnow(double reserveWater) {
+        this.waterReserveInSnow = reserveWater;
     }
 
     public void setLevelFreezingGround(double levelFreezingGround) {
@@ -241,7 +242,7 @@ public class Hydrology {
         "day: "+this.day+'\n'+
         "time: "+this.localTime +'\n'+
                 "levelSnow: "+this.levelSnow +'\n'+
-                "reserveWater: "+this.reserveWater +'\n'+
+                "reserveWater: "+this.waterReserveInSnow +'\n'+
                 "levelFreezingGround: "+this.levelFreezingGround +'\n'+
                 "temperatureWater: "+this.temperatureWater+'\n'+
                 "heightIceOnWater: "+this.heightIceOnWater+'\n'+

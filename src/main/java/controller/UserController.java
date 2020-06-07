@@ -1,7 +1,11 @@
 package controller;
 
 import dao.FloodDao;
+import dao.PredictionLevelWaterDao;
 import entity.Flood;
+import entity.Predictionlevelwater;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.primefaces.util.DateUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,8 @@ import weatherAPI.WeatherOpenMap;
 import weatherAPI.WeatherOpenMapHttpURLConnection;
 
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -34,7 +40,9 @@ public class UserController {
     @Qualifier("FloodDao")
     @Autowired
     private FloodDao floodDao;
-
+    @Qualifier("PredictionLevelWaterDao")
+    @Autowired
+    private PredictionLevelWaterDao predictionWaterDao;
     @Autowired
     private WeatherDarkSkyHttpURLConnection weatherDarkSkyService;
     @Autowired
@@ -42,11 +50,18 @@ public class UserController {
     @Autowired
     private ReadExcel readExcel;
     @Autowired
-    private AggregationData aggregationData;
+    private AggregationData aggregationFileAndRemoute;
+    @Autowired
+    private FileDataInEntityFlood fileDataInEntityFlood;
     @Autowired
     private NeuralNetwork neuralNetwork;
 
     List<Flood> listFlood=null;
+    List<HydrologyFile> hydrologyListFile=null;
+    List<WeatherDarkSky> listWeatherDarkSky= null;
+    List<PostView> listPostView=null;
+    List<FloodView> listDataBaseFlood=null;
+    List<Predictionlevelwater> predictionlevelwaterList=null;
 
     Calendar date = new GregorianCalendar();
 
@@ -92,7 +107,6 @@ public class UserController {
         if (location.equals("Unknown") || location.equals("")){
         listFloodViews=floodService.getAllFloodViev();
 
-
         uiModel.addAttribute("listFlood",listFloodViews);}
         else {listFloodViews=floodService.searhFloodViev(location);
             uiModel.addAttribute("listFlood",listFloodViews);}
@@ -109,6 +123,9 @@ public class UserController {
                 }
         uiModel.addAttribute("listChangeFlood",listFloodViews);
         uiModel.addAttribute("listChangeFlood",listFloodViews);
+
+        predictionlevelwaterList=predictionWaterDao.getAll();
+        uiModel.addAttribute("listPredictLevelWater",predictionlevelwaterList);
         return "main_page";
     }
 
@@ -119,10 +136,10 @@ public class UserController {
                                  @RequestParam(value = "dayStart",defaultValue ="20") String dayStart, @RequestParam(value = "yearFinish",defaultValue ="2020") String yearFinish,
                                  @RequestParam(value = "monthFinish",defaultValue ="4") String monthFinish, @RequestParam(value = "dayFinish",defaultValue ="25") String dayFinish,
                                  @RequestParam(value = "hourStep",defaultValue ="24") String hourStep, @RequestParam(value = "aggregate",defaultValue="") String aggregate) {
-        List<PostView> listPostView=postService.getAllPostView();
+
+        listPostView=postService.getAllPostView();
         uiModel.addAttribute("listPosts",listPostView);
-        List<WeatherDarkSky> listWeatherDarkSky= null;
-        List<Hydrology> hydrologyList=null;
+
         if((latitude!=null) && (!latitude.equals(""))&&(longitude!=null) && (!longitude.equals(""))) {
             try {
                 listWeatherDarkSky = weatherDarkSkyService.getWeather(Integer.valueOf(yearStart), Integer.valueOf(monthStart), Integer.valueOf(dayStart), 00,
@@ -133,29 +150,126 @@ public class UserController {
             uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
         }
         if((post!=null) && (!post.equals(""))) {
-            hydrologyList = readExcel.readExcelAll("Hydrometcentre.xls",post,
+            hydrologyListFile = readExcel.readExcelAll("Hydrometcentre_data.xls",post,
                    Integer.valueOf(yearStart),Integer.valueOf(monthStart),Integer.valueOf(dayStart),
                     Integer.valueOf(yearFinish),Integer.valueOf(monthFinish),Integer.valueOf(dayFinish));
-            uiModel.addAttribute("hydrologyList",hydrologyList);
+            uiModel.addAttribute("hydrologyListFile",hydrologyListFile);
         }
-//        if(listWeatherDarkSky!=null && hydrologyList!=null) {
-//            listFlood = aggregationData.aggregation(hydrologyList, listWeatherDarkSky, post);
-//            uiModel.addAttribute("listFlood", listFlood);
-//        }
+        if(listWeatherDarkSky!=null && hydrologyListFile!=null && post!=null) {
+            listFlood = aggregationFileAndRemoute.aggregationFileAndRemoute(hydrologyListFile, listWeatherDarkSky, post);
+            if (listFlood!=null) uiModel.addAttribute("listFlood", listFlood); }
+
+
+            listDataBaseFlood=floodService.getAllFloodViev();
+            uiModel.addAttribute("listDataBaseFlood",listDataBaseFlood);
+
+        return "administration";
+    }
+
+    @RequestMapping(value = "/administrationDell", method = RequestMethod.GET)//Mapping web context, на который будет реагировать метод
+    public String administrationDell(Model uiModel,
+                                 @RequestParam(value = "post",required = false) String post,
+                                 @RequestParam(value = "yearStart",defaultValue ="2020") String yearStart, @RequestParam(value = "monthStart",defaultValue ="4") String monthStart,
+                                 @RequestParam(value = "dayStart",defaultValue ="20") String dayStart, @RequestParam(value = "yearFinish",defaultValue ="2020") String yearFinish,
+                                 @RequestParam(value = "monthFinish",defaultValue ="4") String monthFinish, @RequestParam(value = "dayFinish",defaultValue ="25") String dayFinish) throws ParseException {
+
+        uiModel.addAttribute("listPosts",listPostView);
+
+        uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
+
+        uiModel.addAttribute("hydrologyListFile",hydrologyListFile);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date startDate=null;
+        Date finishDate=null;
+        startDate=format.parse(yearStart+"-"+monthStart+"-"+dayStart);
+        finishDate=format.parse(yearFinish+"-"+monthFinish+"-"+dayFinish);
+        startDate= new Date(startDate.getTime() - 1 * 24 * 3600 * 1000l);
+        finishDate= new Date(finishDate.getTime() + 1 * 24 * 3600 * 1000l);
+        for (FloodView floodView : listDataBaseFlood){
+
+            if(floodView.getNamePost().equals(post)&& floodView.getDate().after(startDate)&&
+            floodView.getDate().before(finishDate)){
+                floodDao.dell(floodView.getIdFlood());
+            }
+        }
+
+        listDataBaseFlood=floodService.getAllFloodViev();
+        uiModel.addAttribute("listDataBaseFlood",listDataBaseFlood);
+
+        return "administration";
+    }
+
+    @RequestMapping(value = "/administrationPrognoz", method = RequestMethod.GET)//Mapping web context, на который будет реагировать метод
+    public String administrationPrognoz(Model uiModel,
+                                     @RequestParam(value = "post",required = false) String post,
+                                     @RequestParam(value = "yearStart",defaultValue ="2020") String yearStart, @RequestParam(value = "monthStart",defaultValue ="4") String monthStart,
+                                     @RequestParam(value = "dayStart",defaultValue ="20") String dayStart, @RequestParam(value = "yearFinish",defaultValue ="2020") String yearFinish,
+                                     @RequestParam(value = "monthFinish",defaultValue ="4") String monthFinish, @RequestParam(value = "dayFinish",defaultValue ="25") String dayFinish) throws ParseException {
+
+        uiModel.addAttribute("listPosts",listPostView);
+
+        uiModel.addAttribute("listWeatherDarkSky",listWeatherDarkSky);
+
+        uiModel.addAttribute("hydrologyListFile",hydrologyListFile);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date startDate=null;
+        Date finishDate=null;
+        startDate=format.parse(yearStart+"-"+monthStart+"-"+dayStart);
+        finishDate=format.parse(yearFinish+"-"+monthFinish+"-"+dayFinish);
+
+        startDate= new Date(startDate.getTime() - 10 * 24 * 3600 * 1000l);
+        List<FloodView> searchList=floodService.searhFloodViev(post,startDate,finishDate);
+
+        double downfallBefore3days=0;
+        double changeSnowBefore10days=0;
+        double changeWaterBefore3dayMiddle=0;
+        double temperatureMiddleBefore3days=0;
+
+        for (int i=1;i<searchList.size();i++){
+
+            searchList.get(i).setChangeLevelWater(searchList.get(i-1));
+            searchList.get(i).setChangeLevelSnow(searchList.get(i-1));
+            if(i>=10){
+                for(int j=i-10;j<10;j++) {changeSnowBefore10days+=searchList.get(j).getChangeLevelSnow();}
+                searchList.get(i).setChangeSnowBefore10days(changeSnowBefore10days);
+                changeSnowBefore10days=0;
+            }
+            if(i>=3) searchList.get(i).setDownfallBefore3days(searchList.get(i-3).getSnowRain()+searchList.get(i-2).getSnowRain()+searchList.get(i-1).getSnowRain());
+            if(i>=3) searchList.get(i).setTemperatureMiddleBefore3days((searchList.get(i-3).getTemperatureMidle()+searchList.get(i-2).getTemperatureMidle()+searchList.get(i-1).getTemperatureMidle())/3);
+            if(i>=3) searchList.get(i).setChangeWaterBefore3dayMiddle((searchList.get(i-3).getChangeLevelWater()+searchList.get(i-2).getChangeLevelWater()+searchList.get(i-1).getChangeLevelWater())/3);
+        }
+
+
+
+        uiModel.addAttribute("listDataBaseFlood",searchList);
+
         return "administration";
     }
 
 
-    @RequestMapping(value = "/download", method = RequestMethod.POST)//Mapping web context, на который будет реагировать метод
-    public @ResponseBody String download(@RequestParam(value = "aggregate",defaultValue ="something") String objectList) {
+    @RequestMapping(value = "/downloadAgregate", method = RequestMethod.POST)//Mapping web context, на который будет реагировать метод
+    public @ResponseBody String downloadAgregate(@RequestParam(value = "downloadAgregate",defaultValue ="something") String objectList) {
         //Запись в БД
         for(Flood x : listFlood)
         floodDao.add(x);
         return "Запись в базу данных завершена";
     }
 
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.POST)//Mapping web context, на который будет реагировать метод
+    public @ResponseBody String downloadFile(@RequestParam(value = "downloadFile",defaultValue ="something") String objectList) {
 
-     //Model объекта на стороне Фронта для сопоставления с объектом на стороне Бэка
+        if(hydrologyListFile!=null) {
+            listFlood = fileDataInEntityFlood.translateDataInEntityFlood(hydrologyListFile);
+        }
+        //Запись в БД
+        for(Flood x : listFlood)
+            floodDao.add(x);
+        return "Запись в базу данных завершена";
+    }
+
+    //Model объекта на стороне Фронта для сопоставления с объектом на стороне Бэка
     //(в методе addKoords). В jsp файле создаётся соответствующая данной модели форма
     @RequestMapping(value = "/idpost", method = RequestMethod.GET)
     public ModelAndView idPost() {

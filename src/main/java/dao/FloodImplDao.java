@@ -44,9 +44,27 @@ public class FloodImplDao implements FloodDao {
     }
 
     @Override
+    public Flood searh(int idflood) {
+        Query query=sessionFactory.getCurrentSession().createQuery("from Flood where idFlood=:idflood",Flood.class);
+        query.setParameter("idflood", idflood);
+        Flood flood= (Flood) query.list().get(0);
+        return flood;
+    }
+
+    @Override
     public List<Flood> searh(String locality) {
-        Query query=sessionFactory.getCurrentSession().createQuery("from Flood where postByPostId.localityByLocalityId.nameLocality=:locality",Flood.class);
+        Query query=sessionFactory.getCurrentSession().createQuery("from Flood where postId.localityId.nameLocality=:locality",Flood.class);
         query.setParameter("locality", locality);
+        List<Flood> floodList=query.list();
+        return floodList;
+    }
+
+    @Override
+    public List<Flood> searh(String namePost, Date dateStart, Date dateFinish) {
+        Query query=sessionFactory.getCurrentSession().createQuery("from Flood where postId.namePost=:namePost AND date>=:dateStart AND date<=:dateFinish ORDER BY date",Flood.class);
+        query.setParameter("namePost", namePost);
+        query.setParameter("dateStart", dateStart);
+        query.setParameter("dateFinish", dateFinish);
         List<Flood> floodList=query.list();
         return floodList;
     }
@@ -57,17 +75,23 @@ public class FloodImplDao implements FloodDao {
     }
 
     @Override
-    public void add(Flood flood) {
+    public void addOrApdate(Flood flood) {
         sessionFactory.getCurrentSession().saveOrUpdate(flood);
     }
 
     @Override
-    public void dell(Flood flood) {
-
+    public void add(Flood flood) {
+        sessionFactory.getCurrentSession().save(flood);
     }
 
     @Override
-    public void dell(int idflood) {
+    public void dell(Flood flood) {
+        sessionFactory.getCurrentSession().remove(flood);
+    }
+
+    @Override
+    public void dell(int idFlood) {
+        sessionFactory.getCurrentSession().delete(searh(idFlood));
 
     }
 

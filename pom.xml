@@ -142,6 +142,21 @@
         <!-- Импорт моделей Keras TenzerFlow -->
 <!--        <dependency>-->
 <!--            <groupId>org.deeplearning4j</groupId>-->
+<!--            <artifactId>deeplearning4j-core</artifactId>-->
+<!--            <version>1.0.0-beta7</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.nd4j</groupId>-->
+<!--            <artifactId>nd4j-native-platform</artifactId>-->
+<!--            <version>1.0.0-beta7</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.google.cloud.dataflow</groupId>-->
+<!--            <artifactId>google-cloud-dataflow-java-sdk-all</artifactId>-->
+<!--            <version>2.5.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.deeplearning4j</groupId>-->
 <!--            <artifactId>deeplearning4j-modelimport</artifactId>-->
 <!--            <version>1.0.0-beta7</version>-->
 <!--        </dependency>-->
@@ -155,6 +170,11 @@
 <!--            <groupId>org.deeplearning4j</groupId>-->
 <!--            <artifactId>deeplearning4j-nn</artifactId>-->
 <!--            <version>1.0.0-beta7</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.nd4j</groupId>-->
+<!--            <artifactId>nd4j-common</artifactId>-->
+<!--            <version>1.0.0-beta6</version>-->
 <!--        </dependency>-->
 
     </dependencies>

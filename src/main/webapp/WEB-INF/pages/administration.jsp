@@ -1,17 +1,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Vladimir
-  Date: 25.05.2019
-  Time: 20:10
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html>
 <head>
     <title>Страница администратора</title>
     <style>
+        html, body {
+            height: 100%;
+        }
         table {table-layout: fixed;width:98%; height: 200px; margin-top: 16px; border: black; }
         .tr{background: cornflowerblue; color: white; text-align: center; vertical-align: center; horiz-align: center;}
         td {word-wrap:break-word; text-align-all: center; border: black; align: center;}
@@ -20,9 +16,6 @@
             overflow: scroll;
         }
         /* Optional: Makes the sample page fill the window. */
-        html, body {
-            height: 100%;
-        }
     </style>
     <script>
         // DOMContentLoaded – означает, что все DOM-элементы разметки уже созданы, можно их искать, вешать обработчики,
@@ -41,58 +34,7 @@
         //     });
         // });
     </script>
-    <script>
-        function createXMLHttp() {
-            var Request = false;
 
-            if (window.XMLHttpRequest)
-            {
-                //Gecko-совместимые браузеры, Safari, Konqueror
-                Request = new XMLHttpRequest();
-            }
-            else if (window.ActiveXObject)
-            {
-                //Internet explorer
-                try
-                {
-                    Request = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                catch (CatchException)
-                {
-                    Request = new ActiveXObject("Msxml2.XMLHTTP");
-                }
-            }
-
-            if (!Request)
-            {
-                alert("Невозможно создать XMLHttpRequest");
-            }
-            return Request;
-        }
-        function getAjax(url, callback) { // функция Ajax GET
-
-            // создаем Объект
-            var oXmlHttp = createXMLHttp();
-            var body='aggregate='+encodeURIComponent('value');
-            // подготовка, объявление заголовков
-            oXmlHttp.open("POST", url, true);
-            oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-            // описание функции, которая будет вызвана, когда придет ответ от сервера
-            oXmlHttp.onreadystatechange = function() {
-                if (oXmlHttp.readyState == 4) {
-                    if (oXmlHttp.status == 200) {
-                        callback(oXmlHttp.responseText);
-                    } else {
-                        callback(oXmlHttp.statusText);
-                    }
-                }
-            }
-            oXmlHttp.send(body);
-        }
-        function printGet(text) {
-            alert(text);
-        }
-    </script>
 </head>
 <body>
 <H2>Посты наблюдения</H2>
@@ -132,15 +74,15 @@
             var position = tr.querySelector("td.geo").textContent;//Берём нужную ячейку
             position = position.split(/\s+/).map(Number); //Разбиваем содержимое ячейки
             var post = tr.querySelector("td.post").textContent;//Берём нужную ячейку
-            document.nameForm.latitude.value=position[0];
-            document.nameForm.longitude.value = position[1];
-            document.nameForm.post.value = post;
+            document.FormDownload.latitude.value=position[0];
+            document.FormDownload.longitude.value = position[1];
+            document.FormDownload.post.value = post;
         });
     </script>
 </div>
 <br>
 <div>
-    <form name="nameForm" method="GET" action="/water/water/administration">
+    <form name="FormDownload" method="GET" action="/water/water/administration">
     Широта: <input type="text" name="latitude"/>
     Долгота:<input type="text" name="longitude"/>
     Пост: <input type="text" name="post"/>
@@ -207,31 +149,48 @@
         <tr class="tr">
             <th>ID Поста</th>
             <th>Дата</th>
+            <th>Кол. дн. с нач.года</th>
             <th>Время</th>
+            <th>Осадки</th>
             <th>Уровень снега</th>
-            <th>Плотность снега</th>
+            <th>Водозапас в снегу</th>
             <th>Промерзание почвы</th>
-            <th>Температура воды</th>
+            <th>Минимальная t</th>
+            <th>Максимальная t</th>
+            <th>Дефицит влажности воздуха</th>
+            <th>Солнечное сияние</th>
             <th>Толщина льда на водоёме</th>
             <th>Уровень воды</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${hydrologyList}" var="hydrology">
+        <c:forEach items="${hydrologyListFile}" var="hydrologyListFile">
             <tr>
-                <td>${hydrology.namePost}</td>
-                <td>${hydrology.localDate}</td>
-                <td>${hydrology.localTime}</td>
-                <td>${hydrology.levelSnow}</td>
-                <td>${hydrology.reserveWater}</td>
-                <td>${hydrology.levelFreezingGround}</td>
-                <td>${hydrology.temperatureWater}</td>
-                <td>${hydrology.heightIceOnWater}</td>
-                <td>${hydrology.lewelWater}</td>
+                <td>${hydrologyListFile.namePost}</td>
+                <td>${hydrologyListFile.localDate}</td>
+                <td>${hydrologyListFile.countDay}</td>
+                <td>${hydrologyListFile.localTime}</td>
+                <td>${hydrologyListFile.downfall}</td>
+                <td>${hydrologyListFile.levelSnow}</td>
+                <td>${hydrologyListFile.waterReserveInSnow}</td>
+                <td>${hydrologyListFile.levelFreezingGround}</td>
+                <td>${hydrologyListFile.temperatureMin}</td>
+                <td>${hydrologyListFile.temperatureMax}</td>
+                <td>${hydrologyListFile.deficitHumidityAir}</td>
+                <td>${hydrologyListFile.sunShine}</td>
+                <td>${hydrologyListFile.heightIceOnWater}</td>
+                <td>${hydrologyListFile.lewelWater}</td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
+</div>
+<br>
+<div>
+    <form name="formDowloadFile" method="POST">
+        <input type="text" name="downloadFile"/>
+        <button type="button" onclick="getAjax('/water/water/downloadFile',printGet,'downloadFile')">Загрузить из файла</button>
+    </form>
 </div>
 <br>
 <H2>Объединённые данные</H2>
@@ -240,37 +199,29 @@
         <thead>
         <tr class="tr">
             <th>Индификатор поста</th>
+            <th>Координаты</th>
             <th>Дата</th>
-            <th>Время</th>
-            <th>Долгота дня</th>
-            <th>Снег</th>
-            <th>Дождь</th>
-            <th>Снег с дождём</th>
+            <th>Количество дней</th>
+            <th>Осадки</th>
             <th>Влажность</th>
             <th>Дневная t</th>
             <th>Ночная t</th>
             <th>Средняя t</th>
             <th>Максимальная t</th>
             <th>Минимальная t</th>
-<%--            <th>Облачность</th>--%>
             <th>Высота снежного покрова</th>
             <th>Плотность снежного покрова</th>
             <th>Промерзание почвы</th>
-            <th>t воды</th>
             <th>Толщина льда</th>
             <th>Уровень воды</th>
-            <th>Затопления</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${listFlood}" var="flood">
             <tr>
-                <td>${flood.postByPostId.namePost}</td>
+                <td>${flood.postId.namePost}</td>
+                <td>${flood.postId.geographkoordsId.koordinate}</td>
                 <td>${flood.date}</td>
-                <td>${flood.time}</td>
-                <td>${flood.longitudeDay}</td>
-                <td>${flood.snow}</td>
-                <td>${flood.rain}</td>
                 <td>${flood.snowRain}</td>
                 <td>${flood.relativeHumidity}</td>
                 <td>${flood.humidityDeficit}</td>
@@ -278,14 +229,11 @@
                 <td>${flood.temperatureNight}</td>
                 <td>${flood.temperatureMax}</td>
                 <td>${flood.temperatureMin}</td>
-<%--                <td>${flood.solaractivity}</td>--%>
                 <td>${flood.levelSnow}</td>
                 <td>${flood.waterReserveInSnow}</td>
                 <td>${flood.levelFreezingGround}</td>
-                <td>${flood.temperatureWater}</td>
                 <td>${flood.heightIceOnWater}</td>
                 <td>${flood.levelWater}</td>
-                <td>${flood.warningFlood}</td>
             </tr>
         </c:forEach>
         </tbody>
@@ -293,10 +241,181 @@
 </div>
 <br>
 <div>
-    <form name="form" method="POST">
-        <input type="text" name="aggregate"/>
-        <button type="button" onclick="getAjax('/water/water/download',printGet)">Загрузить</button>
+    <form name="formDowload" method="POST">
+        <input type="text" name="downloadAgregate"/>
+        <button type="button" onclick="getAjax('/water/water/downloadAgregate',printGet,'downloadAgregate')">Загрузить объединенные данные</button>
     </form>
 </div>
+<H2>Исторические данные</H2>
+<div class="container">
+    <table class="tableDataBase">
+        <thead>
+        <tr class="tr">
+            <th>Имя поста</th>
+            <th>Номер поста</th>
+            <th>Дата</th>
+            <th>Кол. дн. с нач. г.</th>
+            <th>Время</th>
+            <th>Осадки</th>
+            <th>Высота снежного покрова</th>
+            <th>Водозапас снега</th>
+            <th>Промерзание почвы</th>
+            <th>Высота льда</th>
+            <th>Температура max</th>
+            <th>Температура min</th>
+            <th>Температура midle</th>
+            <th>Дифицит влажности</th>
+            <th>Солнечное сияние</th>
+            <th>Уровень воды</th>
+            <th>Измен. снеж. покр.</th>
+            <th>Измен. снеж. покр. 10дн.</th>
+            <th>Средн. измен. ур. воды 3дн.</th>
+            <th>Осадки 3дн.</th>
+            <th>Средн. t за 3 дн.</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${listDataBaseFlood}" var="DataBaseFlood">
+            <tr>
+                <td class="post">${DataBaseFlood.namePost}</td>
+                <td>${DataBaseFlood.numberPostForNrlNtwrk}</td>
+                <td class="date-cell">${DataBaseFlood.date}</td>
+                <td>${DataBaseFlood.numberDaysYear}</td>
+                <td>${DataBaseFlood.time}</td>
+                <td>${DataBaseFlood.snowRain}</td>
+                <td>${DataBaseFlood.levelSnow}</td>
+                <td>${DataBaseFlood.waterReserveInSnow}</td>
+                <td>${DataBaseFlood.levelFreezingGround}</td>
+                <td>${DataBaseFlood.heightIceOnWater}</td>
+                <td>${DataBaseFlood.temperatureMax}</td>
+                <td>${DataBaseFlood.temperatureMin}</td>
+                <td>${DataBaseFlood.temperatureMidle}</td>
+                <td>${DataBaseFlood.humidityDeficit}</td>
+                <td>${DataBaseFlood.solaractivity}</td>
+                <td>${DataBaseFlood.levelWater}</td>
+                <td>${DataBaseFlood.changeLevelSnow}</td>
+                <td>${DataBaseFlood.changeSnowBefore10days}</td>
+                <td>${DataBaseFlood.changeWaterBefore3dayMiddle}</td>
+                <td>${DataBaseFlood.downfallBefore3days}</td>
+                <td>${DataBaseFlood.temperatureMiddleBefore3days}</td>
+
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    <script>
+        document.querySelector('table.tableDataBase').addEventListener("click", e => {
+            var tr = e.target.closest("tbody > tr");
+            if (!tr) return;
+            var post = tr.querySelector("td.post").textContent;//Берём нужную ячейку
+            var date=tr.querySelector("td.date-cell").textContent;//Берём нужную ячейку
+            date = date.split("-").map(Number); //Разбиваем содержимое ячейки
+            document.FormDell.post.value = post;
+            document.FormPrognoz.post.value=post;
+            document.FormDell.yearStart.value = date[0];
+            document.FormPrognoz.yearStart.value=date[0];
+            document.FormDell.monthStart.value = date[1];
+            document.FormPrognoz.monthStart.value=date[1];
+            document.FormDell.dayStart.value = date[2];
+            document.FormPrognoz.dayStart.value=date[2];
+        });
+    </script>
+</div>
+<br>
+<div>
+    <form name="FormDell" method="GET" action="/water/water/administrationDell">
+        Пост: <input type="text" name="post"/>
+        Год с:<input type="text" name="yearStart"/>
+        Месяц с:<input type="text" name="monthStart"/>
+        День с:<input type="text" name="dayStart"/>
+        Год по:<input type="text" name="yearFinish"/>
+        Месяц по:<input type="text" name="monthFinish"/>
+        День по:<input type="text" name="dayFinish"/>
+        <button tybe="submit">Удалить</button>
+    </form>
+</div>
+<div>
+    <form name="FormPrognoz" method="GET" action="/water/water/administrationPrognoz">
+        Пост: <input type="text" name="post"/>
+        Год с:<input type="text" name="yearStart"/>
+        Месяц с:<input type="text" name="monthStart"/>
+        День с:<input type="text" name="dayStart"/>
+        Год по:<input type="text" name="yearFinish"/>
+        Месяц по:<input type="text" name="monthFinish"/>
+        День по:<input type="text" name="dayFinish"/>
+        <button tybe="submit">Прогноз</button>
+    </form>
+</div>
+<script>
+    function createXMLHttp() {
+        var Request = false;
+
+        if (window.XMLHttpRequest)
+        {
+            //Gecko-совместимые браузеры, Safari, Konqueror
+            Request = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject)
+        {
+            //Internet explorer
+            try
+            {
+                Request = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            catch (CatchException)
+            {
+                Request = new ActiveXObject("Msxml2.XMLHTTP");
+            }
+        }
+        if (!Request)
+        {
+            alert("Невозможно создать XMLHttpRequest");
+        }
+        return Request;
+    }
+    function getAjax(url, callback, body) { // функция Ajax GET
+        // создаем Объект
+        var oXmlHttp = createXMLHttp();
+        var body=body+'='+encodeURIComponent('value');
+        // подготовка, объявление заголовков
+        oXmlHttp.open("POST", url, true);
+        oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        // описание функции, которая будет вызвана, когда придет ответ от сервера
+        oXmlHttp.onreadystatechange = function() {
+            if (oXmlHttp.readyState == 4) {
+                if (oXmlHttp.status == 200) {
+                    callback(oXmlHttp.responseText);
+                } else {
+                    callback(oXmlHttp.statusText);
+                }
+            }
+        }
+        oXmlHttp.send(body);
+    }
+    function getAjaxPrognoz(url, callback, value1,value2,value3,value4,value5,value6,value7) { // функция Ajax GET
+        // создаем Объект
+        var oXmlHttp = createXMLHttp();
+        var body="body";
+        var body=body+'='+encodeURIComponent(value1)+encodeURIComponent(value2);
+        // подготовка, объявление заголовков
+        oXmlHttp.open("POST", url, true);
+        oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        // описание функции, которая будет вызвана, когда придет ответ от сервера
+        oXmlHttp.onreadystatechange = function() {
+            if (oXmlHttp.readyState == 4) {
+                if (oXmlHttp.status == 200) {
+                    callback(oXmlHttp.responseText);
+                } else {
+                    callback(oXmlHttp.statusText);
+                }
+            }
+        }
+        oXmlHttp.send(body);
+    }
+    function printGet(text) {
+        alert(text);
+    }
+</script>
 </body>
 </html>
