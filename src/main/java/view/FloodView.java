@@ -45,6 +45,7 @@ public class FloodView implements Serializable,Comparable<FloodView> {
     private Double changeSnowBefore10days;
     private Double changeWaterBefore3dayMiddle;
     private Double temperatureMiddleBefore3days;
+    private Double forecastChangeLevelWater;
     private DecimalFormat df;
 
 
@@ -245,8 +246,19 @@ public class FloodView implements Serializable,Comparable<FloodView> {
         else return 0.0;
     }
 
+    public Double getForecastChangeLevelWater() {
+        return forecastChangeLevelWater;
+    }
+
+    public void setLevelWater(Double levelWater) {
+        this.levelWater = (double)Math.round(levelWater * 10000d)/10000d;
+    }
+
     public void setChangeLevelWater(FloodView obj) {
         this.changeLevelWater =(double)Math.round(( this.levelWater-obj.levelWater) * 10000d) / 10000d;
+    }
+    public void setChangeLevelWater(Double fofecast) {
+        this.changeLevelWater =(double)Math.round(fofecast * 10000d) / 10000d;
     }
 
     public void setSpeedChangeLevelWater(FloodView obj) {
@@ -286,6 +298,10 @@ public class FloodView implements Serializable,Comparable<FloodView> {
 
     public void setTemperatureMiddleBefore3days(Double temperatureMiddleBefore3days) {
         this.temperatureMiddleBefore3days = temperatureMiddleBefore3days;
+    }
+
+    public void setForecastChangeLevelWater(Double forecastChangeLevelWater) {
+        this.forecastChangeLevelWater = forecastChangeLevelWater;
     }
 
     @Override

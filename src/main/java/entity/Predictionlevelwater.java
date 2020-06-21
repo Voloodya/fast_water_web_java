@@ -18,6 +18,17 @@ public class Predictionlevelwater implements Serializable {
     private int warningFlood;
     private Post postId;
 
+    public Predictionlevelwater() {
+    }
+
+    public Predictionlevelwater(Date date, Time time, Double changeLevelWater, double levelWater, Post postId) {
+        this.date = date;
+        this.time = time;
+        this.changeLevelWater = (double)Math.round(changeLevelWater * 10000d)/10000d;
+        this.levelWater = (double)Math.round(levelWater * 10000d)/10000d;
+        this.postId = postId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_PredictionLevelWater")
@@ -98,7 +109,7 @@ public class Predictionlevelwater implements Serializable {
         return postId;
     }
 
-    public void setPostId(Post postByPostId) {
+    public void setPostId(Post postId) {
         this.postId = postId;
     }
 }

@@ -5,6 +5,45 @@
 <head>
     <title>Страница администратора</title>
     <style>
+        .thead-table-fixed thead {
+            width: calc(100% - 1px) !important;
+        }
+
+        .thead-table-fixed tbody {
+            display: block;
+            height: 200px;
+            overflow: auto;
+            overflow-y:scroll;
+        }
+
+        .thead-table-fixed thead, .thead-table-fixed tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            text-align: center; vertical-align: center; horiz-align: center;
+        }
+    </style>
+    <style>
+        .dataBD thead {
+            width: calc(100% - 1px) !important;
+        }
+
+        .dataBD tbody {
+            display: block;
+            height: 200px;
+            overflow: auto;
+            overflow-y:scroll;
+        }
+
+        .dataBD thead, .dataBD tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            text-align: center; vertical-align: center; horiz-align: center;
+        }
+    </style>
+
+    <style>
         html, body {
             height: 100%;
         }
@@ -16,6 +55,10 @@
             overflow: scroll;
         }
         /* Optional: Makes the sample page fill the window. */
+    </style>
+    <style>
+        .div-right{margin-left: auto; margin-right: 0;
+        }
     </style>
     <script>
         // DOMContentLoaded – означает, что все DOM-элементы разметки уже созданы, можно их искать, вешать обработчики,
@@ -34,15 +77,20 @@
         //     });
         // });
     </script>
-
 </head>
 <body>
-<H2>Посты наблюдения</H2>
-<div class="container">
-<table class="tablePost">
+<div>
+<div class="div-right">
+    <form name="form_button" method="GET" action='/water/water/main'>
+        <button type="submit">На главную</button>
+    </form>
+</div>
+</div>
+<table class="thead-table-fixed">
+    <caption><H2 align="left">Посты наблюдения</H2></caption>
     <thead>
-    <tr class="tr">
-        <th>ID поста</th>
+    <tr bgcolor="#730d73"; style="color: white">
+<%--        <th>ID поста</th>--%>
         <th>Имя поста</th>
         <th>Координаты</th>
         <th>Высота над уровнем моря</th>
@@ -55,7 +103,7 @@
     <tbody>
     <c:forEach items="${listPosts}" var="post">
         <tr>
-            <td>${post.idPost}</td>
+<%--            <td>${post.idPost}</td>--%>
             <td class="post">${post.namePost}</td>
             <td class="geo">${post.geographkoords}</td>
             <td>${post.hightSeaLevel}</td>
@@ -68,7 +116,7 @@
     </tbody>
 </table>
     <script>
-        document.querySelector('table.tablePost').addEventListener("click", e => {
+        document.querySelector('table.thead-table-fixed').addEventListener("click", e => {
             var tr = e.target.closest("tbody > tr");
             if (!tr) return;
             var position = tr.querySelector("td.geo").textContent;//Берём нужную ячейку
@@ -96,11 +144,11 @@
     </form>
 </div>
 <br>
-<H2>Данные с ресурса DarkSky</H2>
-<div class="container">
-    <table>
+<div>
+    <table class="thead-table-fixed">
+        <caption><H2 align="left">Данные с ресурса DarkSky</H2></caption>
         <thead>
-        <tr class="tr">
+        <tr bgcolor="#730d73"; style="color: white">
             <th>Координаты</th>
             <th>Дата</th>
             <th>Время</th>
@@ -130,7 +178,7 @@
                 <td>${weatherdarkSky.temperatureMax}</td>
                 <td>${weatherdarkSky.temperatureHigh}</td>
                 <td>${weatherdarkSky.temperatureLow}</td>
-                <td class>${weatherdarkSky.temperature}</td>
+                <td class="temp">${weatherdarkSky.temperature}</td>
                 <td>${weatherdarkSky.humidity}</td>
                 <td>${weatherdarkSky.precipIntensity}</td>
                 <td>${weatherdarkSky.snow}</td>
@@ -142,15 +190,15 @@
     </table>
 </div>
 <br>
-<H2>Данные c файла</H2>
-<div class="container">
-    <table>
+<div>
+    <table class="thead-table-fixed">
+        <caption><H2 align="left">Данные из файла</H2></caption>
         <thead>
-        <tr class="tr">
-            <th>ID Поста</th>
+        <tr bgcolor="#730d73"; style="color: white">
+            <th>Пост</th>
             <th>Дата</th>
             <th>Кол. дн. с нач.года</th>
-            <th>Время</th>
+<%--            <th>Время</th>--%>
             <th>Осадки</th>
             <th>Уровень снега</th>
             <th>Водозапас в снегу</th>
@@ -169,7 +217,7 @@
                 <td>${hydrologyListFile.namePost}</td>
                 <td>${hydrologyListFile.localDate}</td>
                 <td>${hydrologyListFile.countDay}</td>
-                <td>${hydrologyListFile.localTime}</td>
+<%--                <td>${hydrologyListFile.localTime}</td>--%>
                 <td>${hydrologyListFile.downfall}</td>
                 <td>${hydrologyListFile.levelSnow}</td>
                 <td>${hydrologyListFile.waterReserveInSnow}</td>
@@ -193,11 +241,11 @@
     </form>
 </div>
 <br>
-<H2>Объединённые данные</H2>
-<div class="container">
-    <table class="flood">
+<div>
+    <table class="thead-table-fixed">
+        <caption><H2 align="left">Объединённые данные</H2></caption>
         <thead>
-        <tr class="tr">
+        <tr bgcolor="#730d73"; style="color: white">
             <th>Индификатор поста</th>
             <th>Координаты</th>
             <th>Дата</th>
@@ -246,11 +294,11 @@
         <button type="button" onclick="getAjax('/water/water/downloadAgregate',printGet,'downloadAgregate')">Загрузить объединенные данные</button>
     </form>
 </div>
-<H2>Исторические данные</H2>
-<div class="container">
-    <table class="tableDataBase">
+<div>
+    <table class="dataBD">
+        <caption><H2 align="left">Записанные данные</H2></caption>
         <thead>
-        <tr class="tr">
+        <tr bgcolor="#730d73"; style="color: white">
             <th>Имя поста</th>
             <th>Номер поста</th>
             <th>Дата</th>
@@ -267,12 +315,13 @@
             <th>Дифицит влажности</th>
             <th>Солнечное сияние</th>
             <th>Уровень воды</th>
+<%--            <th>Изменение уровня воды</th>--%>
             <th>Измен. снеж. покр.</th>
             <th>Измен. снеж. покр. 10дн.</th>
             <th>Средн. измен. ур. воды 3дн.</th>
             <th>Осадки 3дн.</th>
             <th>Средн. t за 3 дн.</th>
-
+            <th>Прогноз изменения ур-на воды</th>
         </tr>
         </thead>
         <tbody>
@@ -294,18 +343,19 @@
                 <td>${DataBaseFlood.humidityDeficit}</td>
                 <td>${DataBaseFlood.solaractivity}</td>
                 <td>${DataBaseFlood.levelWater}</td>
+<%--                <td>${DataBaseFlood.changeLevelWater}</td>--%>
                 <td>${DataBaseFlood.changeLevelSnow}</td>
                 <td>${DataBaseFlood.changeSnowBefore10days}</td>
                 <td>${DataBaseFlood.changeWaterBefore3dayMiddle}</td>
                 <td>${DataBaseFlood.downfallBefore3days}</td>
                 <td>${DataBaseFlood.temperatureMiddleBefore3days}</td>
-
+                <td>${DataBaseFlood.forecastChangeLevelWater}</td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
     <script>
-        document.querySelector('table.tableDataBase').addEventListener("click", e => {
+        document.querySelector('table.dataBD').addEventListener("click", e => {
             var tr = e.target.closest("tbody > tr");
             if (!tr) return;
             var post = tr.querySelector("td.post").textContent;//Берём нужную ячейку

@@ -1,8 +1,10 @@
 package controller;
 
 import dao.FloodDao;
+import dao.PostDao;
 import dao.PredictionLevelWaterDao;
 import entity.Flood;
+import entity.Post;
 import entity.Predictionlevelwater;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.primefaces.util.DateUtils;
@@ -40,6 +42,9 @@ public class UserController {
     @Qualifier("FloodDao")
     @Autowired
     private FloodDao floodDao;
+    @Qualifier("PostDao")
+    @Autowired
+    private PostDao postDao;
     @Qualifier("PredictionLevelWaterDao")
     @Autowired
     private PredictionLevelWaterDao predictionWaterDao;
@@ -62,6 +67,7 @@ public class UserController {
     List<PostView> listPostView=null;
     List<FloodView> listDataBaseFlood=null;
     List<Predictionlevelwater> predictionlevelwaterList=null;
+    List<FloodView> floodViewListForForecast=null;
 
     Calendar date = new GregorianCalendar();
 
@@ -219,31 +225,48 @@ public class UserController {
         startDate=format.parse(yearStart+"-"+monthStart+"-"+dayStart);
         finishDate=format.parse(yearFinish+"-"+monthFinish+"-"+dayFinish);
 
+        Date startDateForecast=new Date(startDate.getTime() - 1 * 24 * 3600 * 1000l);
+        Date dateFinishCalculat=new Date(startDate.getTime() + 1 * 24 * 3600 * 1000l);
         startDate= new Date(startDate.getTime() - 10 * 24 * 3600 * 1000l);
-        List<FloodView> searchList=floodService.searhFloodViev(post,startDate,finishDate);
 
-        double downfallBefore3days=0;
-        double changeSnowBefore10days=0;
-        double changeWaterBefore3dayMiddle=0;
-        double temperatureMiddleBefore3days=0;
+        floodViewListForForecast=floodService.searhFloodViev(post,startDate,finishDate);
 
-        for (int i=1;i<searchList.size();i++){
+        calculationBeforeIndicators(dateFinishCalculat);
 
-            searchList.get(i).setChangeLevelWater(searchList.get(i-1));
-            searchList.get(i).setChangeLevelSnow(searchList.get(i-1));
-            if(i>=10){
-                for(int j=i-10;j<10;j++) {changeSnowBefore10days+=searchList.get(j).getChangeLevelSnow();}
-                searchList.get(i).setChangeSnowBefore10days(changeSnowBefore10days);
-                changeSnowBefore10days=0;
+        Double forecastChandgeLevelWater;
+
+        for (int i=0;i<floodViewListForForecast.size();i++){
+
+            if(floodViewListForForecast.get(i).getDate().after(startDateForecast)){
+                forecastChandgeLevelWater=neuralNetwork.getForecast(floodViewListForForecast.get(i));
+                floodViewListForForecast.get(i).setForecastChangeLevelWater(forecastChandgeLevelWater);
+                floodViewListForForecast.get(i).setChangeLevelWater(forecastChandgeLevelWater);
+                if(i>0){
+                floodViewListForForecast.get(i).setLevelWater(floodViewListForForecast.get(i-1).getLevelWater()+
+                        forecastChandgeLevelWater);}
+                calculationBeforeIndicators(new Date(dateFinishCalculat.getTime() +(i+1) * 24 * 3600 * 1000l));
             }
-            if(i>=3) searchList.get(i).setDownfallBefore3days(searchList.get(i-3).getSnowRain()+searchList.get(i-2).getSnowRain()+searchList.get(i-1).getSnowRain());
-            if(i>=3) searchList.get(i).setTemperatureMiddleBefore3days((searchList.get(i-3).getTemperatureMidle()+searchList.get(i-2).getTemperatureMidle()+searchList.get(i-1).getTemperatureMidle())/3);
-            if(i>=3) searchList.get(i).setChangeWaterBefore3dayMiddle((searchList.get(i-3).getChangeLevelWater()+searchList.get(i-2).getChangeLevelWater()+searchList.get(i-1).getChangeLevelWater())/3);
         }
 
+        Post postPredict=postDao.searсh(floodViewListForForecast.get(0).getNamePost());
+        List <Predictionlevelwater> predictLevelWaterDellList=predictionWaterDao.search(postPredict.getIdPost());
 
+        for (Predictionlevelwater predict : predictLevelWaterDellList){
+            predictionWaterDao.dell(predict);
+        }
 
-        uiModel.addAttribute("listDataBaseFlood",searchList);
+        for(int i=0;i<floodViewListForForecast.size();i++){
+            if(floodViewListForForecast.get(i).getDate().after(startDateForecast)){
+                Post post_=postDao.searсh(floodViewListForForecast.get(i).getIdPost());
+                if(post_!=null){
+                predictionWaterDao.add(new Predictionlevelwater(floodViewListForForecast.get(i).getDate(),
+                        floodViewListForForecast.get(i).getTime(),floodViewListForForecast.get(i).getForecastChangeLevelWater(),
+                        floodViewListForForecast.get(i).getLevelWater(),post_));}
+            }
+
+        }
+
+        uiModel.addAttribute("listDataBaseFlood",floodViewListForForecast);
 
         return "administration";
     }
@@ -303,6 +326,32 @@ public class UserController {
     List<KoordsView> addKoords(@ModelAttribute("koordsFromServer") KoordsView koords){
         geographKoordsService.add(koords);
         return null;
+    }
+
+    public void calculationBeforeIndicators(Date dateFinish){
+
+        double changeSnowBefore10days=0;
+
+        for (int i=1;i<floodViewListForForecast.size();i++){
+
+            if(floodViewListForForecast.get(i).getDate().before(dateFinish)) {
+                floodViewListForForecast.get(i).setChangeLevelWater(floodViewListForForecast.get(i - 1));
+                floodViewListForForecast.get(i).setChangeLevelSnow(floodViewListForForecast.get(i - 1));
+                if (i >= 10) {
+                    for (int j = i - 10; j < 10; j++) {
+                        changeSnowBefore10days += floodViewListForForecast.get(j).getChangeLevelSnow();
+                    }
+                    floodViewListForForecast.get(i).setChangeSnowBefore10days(changeSnowBefore10days);
+                    changeSnowBefore10days = 0;
+                }
+                if (i >= 3)
+                    floodViewListForForecast.get(i).setDownfallBefore3days(floodViewListForForecast.get(i - 3).getSnowRain() + floodViewListForForecast.get(i - 2).getSnowRain() + floodViewListForForecast.get(i - 1).getSnowRain());
+                if (i >= 3)
+                    floodViewListForForecast.get(i).setTemperatureMiddleBefore3days((floodViewListForForecast.get(i - 3).getTemperatureMidle() + floodViewListForForecast.get(i - 2).getTemperatureMidle() + floodViewListForForecast.get(i - 1).getTemperatureMidle()) / 3);
+                if (i >= 3)
+                    floodViewListForForecast.get(i).setChangeWaterBefore3dayMiddle((floodViewListForForecast.get(i - 3).getChangeLevelWater() + floodViewListForForecast.get(i - 2).getChangeLevelWater() + floodViewListForForecast.get(i - 1).getChangeLevelWater()) / 3);
+            }
+        }
     }
 
 }
