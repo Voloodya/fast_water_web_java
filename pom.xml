@@ -14,7 +14,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <hibernate-version>5.4.2.Final</hibernate-version>
-        <mysql-version>5.1.47</mysql-version>
+        <mysql-version>8.0.16</mysql-version>
         <spring-framework-version>5.1.5.RELEASE</spring-framework-version>
         <spring-data-jpa>2.1.4.RELEASE</spring-data-jpa>
         <servlet.api.version>3.1.0</servlet.api.version>
